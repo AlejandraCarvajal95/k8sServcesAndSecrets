@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: camilomzm057/treasure-new:latest   
+          image: camilomzm057/treasure-new:latest
           ports:
             - containerPort: 80
           env:
@@ -30,7 +30,7 @@ spec:
             - name: CLUE
               valueFrom:
                 secretKeyRef:
-                  name: camilomunoz-clue   
+                  name: camilomunoz-clue
                   key: CLUE
 ---
 apiVersion: v1
@@ -45,5 +45,5 @@ spec:
     - name: http
       port: 80
       targetPort: 80
-      nodePort: 8083   
+      # nodePort: 80
   type: NodePort
