@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: ghcr.io/fredyunivalle/treasure-new:latest
+          image: michaelrs2002/treasure-new/:latest
           ports:
             - containerPort: 80
           env:
