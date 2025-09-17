@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: treasure-juanmafla
+  namespace: treasure-hunt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: treasure-juanmafla
+  template:
+    metadata:
+      labels:
+        app: treasure-juanmafla
+    spec:
+      containers:
+        - name: web
+          image: flowxter/treasure-new
+          ports:
+            - containerPort: 80
+          env:
+            - name: TITLE
+              value: "Treasure Hunt — juanmafla"
+            - name: STUDENT
+              value: "juan jose mafla"
+            - name: SALT
+              value: "DS3univalle"
+            - name: KEY_HASH
+              value: "c7d5dd0a0f18eaffe2dc5a22c53d7185758b36fc254a782baa68245b52c6d7e0"
+            - name: CLUE
+              valueFrom:
+                secretKeyRef:
+                  name: juanmafla-clue
+                  key: CLUE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: treasure-juanmafla
+  namespace: treasure-hunt
+spec:
+  selector:
+    app: treasure-juanmafla
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      # nodePort: 31080   # (opcional) fija uno en el rango 30000–32767
+  type: NodePort
+
