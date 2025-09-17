@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: treasure-michael
+  namespace: treasure-hunt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: treasure-michael
+  template:
+    metadata:
+      labels:
+        app: treasure-michael
+    spec:
+      containers:
+        - name: web
+          image: michaelrs2002/treasure-new:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: TITLE
+              value: "Treasure Hunt — Michael"
+            - name: STUDENT
+              value: "Michael Ramirez Suriel"
+            - name: SALT
+              value: "DS3univalle"
+            - name: KEY_HASH
+              value: "bf54c8d992d1c7458df8bc252e9c475519d22f2c55ce0d80f032d41ea2375bf1"
+            - name: CLUE
+              valueFrom:
+                secretKeyRef:
+                  name: michael-clue
+                  key: CLUE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: treasure-michael
+  namespace: treasure-hunt
+spec:
+  selector:
+    app: treasure-michael
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      # nodePort: 31080   # (opcional) fija uno en el rango 30000–32767
+  type: NodePort
+
