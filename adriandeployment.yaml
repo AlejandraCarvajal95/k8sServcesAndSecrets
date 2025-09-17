@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: treasure-joseadrianmarin
+  namespace: treasure-hunt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: treasure-joseadrianmarin
+  template:
+    metadata:
+      labels:
+        app: treasure-joseadrianmarin
+    spec:
+      containers:
+        - name: web
+          image: airwal1/treasure-new
+          ports:
+            - containerPort: 80
+          env:
+            - name: TITLE
+              value: "Treasure Hunt — Adrian"
+            - name: STUDENT
+              value: "joseadrianmarin"
+            - name: SALT
+              value: "DS3univalle"
+            - name: KEY_HASH
+              value: "1390e4a961bfafb4e62e0de970caba871c580ecd9408dc502b505006c078494d"
+            - name: CLUE
+              valueFrom:
+                secretKeyRef:
+                  name: joseadrianmarin-clue
+                  key: CLUE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: treasure-joseadrianmarin
+  namespace: treasure-hunt
+spec:
+  selector:
+    app: treasure-joseadrianmarin
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      # nodePort: 31080   # (opcional) fija uno en el rango 30000–32767
+  type: NodePort
+
