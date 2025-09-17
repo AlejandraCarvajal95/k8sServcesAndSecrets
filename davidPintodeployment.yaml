@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: treasure-davidpinto
+  namespace: treasure-hunt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: treasure-davidpinto
+  template:
+    metadata:
+      labels:
+        app: treasure-davidpinto
+    spec:
+      containers:
+        - name: web
+          image: davidspinto/treasure-new
+          ports:
+            - containerPort: 80
+          env:
+            - name: TITLE
+              value: "Treasure Hunt — David Pinto"
+            - name: STUDENT
+              value: "Juan David Pinto Rodriguez"
+            - name: SALT
+              value: "DS3univalle"
+            - name: KEY_HASH
+              value: "daf79d641ae9758a91cac21837d7ad3e5b8c5057f9f39d15ff12cefcbc2f98c6"
+            - name: CLUE
+              valueFrom:
+                secretKeyRef:
+                  name: davidpinto-clue
+                  key: CLUE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: treasure-davidpinto
+  namespace: treasure-hunt
+spec:
+  selector:
+    app: treasure-davidpinto
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      # nodePort: 31080   # (opcional) fija uno en el rango 30000–32767
+  type: NodePort
+
